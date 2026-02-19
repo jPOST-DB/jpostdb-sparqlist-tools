@@ -1,4 +1,4 @@
-# get protein SPARQL
+# get protein SPARQL (for DB download)
 
 ## Parameters
 

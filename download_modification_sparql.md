@@ -1,4 +1,4 @@
-# get modification SPARQL
+# get modification SPARQL (for DB download)
 
 - Download 用ファイル作成 API
   - Modification

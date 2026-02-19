@@ -1,4 +1,4 @@
-# get PSM SPARQL
+# get PSM SPARQL (for DB download)
 
 ## Parameters
 
