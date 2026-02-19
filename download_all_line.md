@@ -16,7 +16,7 @@
 
 ```javascript
 async ({dataset, limit, sparqlist})=>{
-  var options = {
+  let options = {
     method: 'POST',
     body: "count=1&dataset=" + dataset,
     headers: {
@@ -24,21 +24,21 @@ async ({dataset, limit, sparqlist})=>{
         'Accept': 'application/json'
     }
   }
-  var url = 'https://db-dev.jpostdb.org/rest/api/' + sparqlist;
-  var count = await fetch(url, options).then(res=>res.json()).then(res=>res.results.bindings[0].count.value);
-  console.log("count: " + count);
-  var loop = Math.ceil(parseInt(count) / parseInt(limit));
-  var res = [];
-  console.log("loop: " + loop);
-  for(var i = 0; i < loop; i++){
-    var offset = parseInt(limit) * i;
+
+  const count = await fetch(sparqlist, options).then(res=>res.json()).then(res=>res.results.bindings[0].count.value);
+
+  const loop = Math.ceil(parseInt(count) / parseInt(limit));
+  let res = [];
+
+  for (let i = 0; i < loop; i++){
+    const offset = parseInt(limit) * i;
     options.body = "dataset=" + dataset +"&limit=" + limit + "&offset=" + offset;
-    res[i] = fetch(url, options).then(res=>res.json());
+    res[i] = fetch(sparqlist, options).then(res=>res.json());
   }
-  var data = Promise.all(res);
+  const data = Promise.all(res);
   return data.then(function(res){
-    var sum = res[0];
-    for(var i = 1; i < loop; i++){   
+    const sum = res[0];
+    for(let i = 1; i < loop; i++){   
       Array.prototype.push.apply(sum.results.bindings, res[i].results.bindings);
     }
     return sum;
@@ -54,13 +54,13 @@ async ({dataset, limit, sparqlist})=>{
     return loop;
   },
   text({loop}){
-    var vars = loop.head.vars;
-    var list = loop.results.bindings;
-    var text = vars.join("\t") + "\n";
-    for(var i = 0; i < list.length; i++){
-      var values = [];
-      for(var j = 0; j < vars.length; j++){
-        var val = ""; 
+    const vars = loop.head.vars;
+    const list = loop.results.bindings;
+    let text = vars.join("\t") + "\n";
+    for(let i = 0; i < list.length; i++){
+      let values = [];
+      for(let j = 0; j < vars.length; j++){
+        let val = ""; 
         if(list[i][vars[j]]) val = list[i][vars[j]].value;
         if(val.match(/^\".+\"$/)) val = val.match(/^\"(.+)\"$/)[1];
         values.push(val);

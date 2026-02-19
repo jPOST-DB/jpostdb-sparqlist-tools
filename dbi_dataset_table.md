@@ -80,7 +80,7 @@ async ({datasets, species, species_s, sample_type, cell_line, organ, disease, di
   if(limit) params.push("limit=" + limit );
   if(offset) params.push("offset=" + offset );
   
-  var res = await sparqlet("https://db-dev.jpostdb.org/rest/api/dbi_make_filter_code", params.join("&"));
+  var res = await sparqlet("dbi_make_filter_code", params.join("&"));
   res.select_line = "DISTINCT ?dataset_id ?project_id ?project_title ?project_date ?species_label ?protein_count ?spectrum_count";
   if(line_count){
     res.select_line = "(COUNT(DISTINCT ?dataset_id) AS ?line_count)";
@@ -123,7 +123,7 @@ WHERE {
   FILTER (LANG(?species_label) = 'en') 
   ?project jpo:hasDataset ?dataset ;
            dct:identifier ?project_id ;
-           dct:title ?project_title ;
+           # dct:title ?project_title ; # 今は使ってないし、ここだけ何故か遅いのでコメントアウト
            dct:date ?project_date .
 {{filter.code_dataset}}
 }

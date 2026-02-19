@@ -44,7 +44,7 @@ async ({datasets, proteins, peptides, order, desc, limit, offset, line_count}) =
   if(desc) params.push("desc=" + desc );
   if(limit) params.push("limit=" + limit );
   if(offset) params.push("offset=" + offset );
-  var res = await sparqlet("https://db-dev.jpostdb.org/rest/api/dbi_make_filter_code", params.join("&"));
+  var res = await sparqlet("dbi_make_filter_code", params.join("&"));
   res.select_line = "DISTINCT ?peptide_id ?dataset_id ?accession ?mnemonic ?sequence ?full_name";
   if(line_count){
     let distinct = "";

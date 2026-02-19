@@ -16,8 +16,8 @@
 
 ```javascript
 async ({uniprot, endpoint})=>{
-  var status = await fetch(endpoint).then(res=>res.status);
-  console.log(status);
+  const status = await fetch(endpoint).then(res=>res.status);
+  //console.log(status);
   if(status == 200){
      const options = {
       method: 'POST',
@@ -29,8 +29,7 @@ async ({uniprot, endpoint})=>{
     };
 
     try{
-      var res = await fetch('https://db-dev.jpostdb.org/rest/api/get_exon_info_main', options).then(res=>res.json());
-      return res;
+      return await fetch('get_exon_info_main', options).then(res=>res.json());
     }catch(error){
       console.log(error);
     }

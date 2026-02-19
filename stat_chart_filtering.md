@@ -25,7 +25,7 @@
 
 ```javascript
 async ({species, species_s, sample_type, cell_line, organ, disease, disease_s, modification, instrument}) => {
-  var sparqlet = (api, body) => {
+  const sparqlet = (api, body) => {
     const options = {
       method: 'POST',
       body: body,
@@ -34,10 +34,10 @@ async ({species, species_s, sample_type, cell_line, organ, disease, disease_s, m
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     };
-    var res = fetch(api, options).then(res=>res.json());
+    const res = fetch(api, options).then(res=>res.json());
     return res;
   }
-  var params = [];
+  let params = [];
   params.push("mode=dataset");		
   if(species) params.push("species=" + species);
   if(species_s) params.push("species_s=" + species_s);
@@ -49,9 +49,7 @@ async ({species, species_s, sample_type, cell_line, organ, disease, disease_s, m
   if(modification) params.push("modification=" + modification );
   if(instrument) params.push("instrument=" + instrument );
 
-  var res = await sparqlet("https://db-dev.jpostdb.org/rest/api/dbi_make_filter_code", params.join("&"));
-  
-  return res;
+  return await sparqlet("dbi_make_filter_code", params.join("&"));
 };
 ```
 
@@ -63,10 +61,10 @@ async ({species, species_s, sample_type, cell_line, organ, disease, disease_s, m
   if(type == "sample_type") type = "sampleType";
   else if(type == "cell_line") type = "cellLine";
   else if(type == "disease") type = "diseaseClass";	
-  var replace = "(REPLACE (STR(?ontology), obo:, '') AS ?id)";
-  var ontology = "";
-  var label = "rdfs:label";
-  var filter = "";
+  let replace = "(REPLACE (STR(?ontology), obo:, '') AS ?id)";
+  let ontology = "";
+  let label = "rdfs:label";
+  let filter = "";
   console.log(type);
   if(type == "species" || type == "sampleType" || type == "cellLine" || type == "organ" || type == "diseaseClass"){
     ontology = "jpo:hasSample/jpo:" + type + " ?ontology .";
@@ -125,9 +123,9 @@ ORDER BY DESC (?count)
 
 ```javascript
 ({type, get_count}) => {
-    var list = get_count.results.bindings;
-    var data = [];
-    for(var i = 0; i < list.length; i++){
+    const list = get_count.results.bindings;
+    let data = [];
+    for(let i = 0; i < list.length; i++){
       data.push({
         label: list[i].label.value.charAt(0).toUpperCase() + list[i].label.value.slice(1),
         count: list[i].count.value,
@@ -151,7 +149,7 @@ ORDER BY DESC (?count)
   },
   html: hbs(`
    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@1.3.0/webcomponents-loader.js" crossorigin=""></script>
-   <link rel="import" href="https://db-dev.jpostdb.org/ts/stanza/stat_pie_chart/">
+   <link rel="import" href="https://tools.jpostdb.org/ts/stanza/stat_pie_chart/">
    <togostanza-stat_pie_chart type='{{type}}' species='{{species}}' species_s='{{species_s}}' sample_type='{{sample_type}}' cell_line='{{cell_line}}' organ='{{organ}}' disease='{{disease}}' disease_s='{{disease_s}}' modification='{{modification}}' instrument='{{instrument}}'></togostanza-stat_pie_chart>
   `)
 })

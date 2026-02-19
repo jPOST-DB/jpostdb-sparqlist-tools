@@ -66,14 +66,14 @@ async ({species_s, disease_s}) => {
   }
   if(species_s){
     var body = "string=" + encodeURIComponent(species_s);
-    var res = await sparqlet("https://db-dev.jpostdb.org/rest/api/dbi_to_taxid", body);
+    var res = await sparqlet("dbi_to_taxid", body);
     for(var i = 0; i < res.results.bindings.length; i++){
       if(res.results.bindings[i].id) species.push(res.results.bindings[i].id.value.replace(/.+purl\.uniprot\.org\/taxonomy\//, "tax:"));
     }
   }
   if(disease_s){
     var body = "string=" + encodeURIComponent(disease_s);
-    var res = await sparqlet("https://db-dev.jpostdb.org/rest/api/dbi_to_doid", body);
+    var res = await sparqlet("dbi_to_doid", body);
     for(var i = 0; i < res.results.bindings.length; i++){
       if(res.results.bindings[i].id) disease.push(res.results.bindings[i].id.value.replace(/.+purl\.obolibrary\.org\/obo\//, "obo:"));
     }

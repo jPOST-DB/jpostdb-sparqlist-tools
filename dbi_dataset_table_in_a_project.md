@@ -35,7 +35,7 @@ async ({limit, offset, line_count}) => {
   if(limit) params.push("limit=" + limit );
   if(offset) params.push("offset=" + offset );
   
-  var res = await sparqlet("https://db-dev.jpostdb.org/rest/api/dbi_make_filter_code", params.join("&"));
+  var res = await sparqlet("dbi_make_filter_code", params.join("&"));
   res.select_line = "DISTINCT ?dataset_id ?project_id ?project_title ?project_date ?species_label ?protein_count ?spectrum_count";
   if (line_count) {
     res.select_line = "(COUNT(DISTINCT ?dataset_id) AS ?line_count)";
