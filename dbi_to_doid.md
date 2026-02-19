@@ -9,7 +9,8 @@
 
 ```javascript
 ({string})=>{
-  return {code: "\"" + decodeURIComponent(string).toLowerCase().split(",").join("\"^^xsd:string \"") + "\"^^xsd:string" };
+  //return {code: "\"" + decodeURIComponent(string).toLowerCase().split(",").join("\"^^xsd:string \"") + "\"^^xsd:string" };
+  return {code: "\"" + decodeURIComponent(string).toLowerCase().split(",").join("\" \"") + "\"" };
 };
 ```
 
