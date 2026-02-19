@@ -89,6 +89,7 @@ async ({species_s, disease_s}) => {
   instrument_mode, instrument, project_keywords, dataset_keywords, protein_keywords, excluded_datasets, 
   excluded_proteins, order, desc, limit, offset, get_ids}) => {
   var code_value = "";
+  var code_species_value = "";
   var code_protein_value = "";
   var code_peptide_value = "";
   var code_up_label_value = "";
@@ -145,13 +146,26 @@ async ({species_s, disease_s}) => {
     code_dataset  += "  FILTER(?dataset NOT IN( " + StoA(excluded_datasets).join(",") + "))\n";
   }
   if(species || get_ids.species){
-    code_value += "  VALUES ?species { ";
-    if(species)         code_value += StoA(species).join(" ");
-    if(get_ids.species) code_value += get_ids.species;
-    code_value += " }\n";
-   // avoid property path bug of virtuoso ( multi species + disease )
+    code_species_value += "  VALUES ?species { ";
+    if(species)         code_species_value += StoA(species).join(" ");
+    if(get_ids.species) code_species_value += " " + get_ids.species;
+    code_species_value += " }\n";
    // code_dataset  += "  ?dataset jpo:hasProfile/jpo:hasSample/jpo:species/rdfs:seeAlso/rdfs:subClassOf* ?species .\n";
-    code_dataset  += "{\n    ?dataset jpo:hasProfile/jpo:hasSample/jpo:species/rdfs:seeAlso ?species .\n  } UNION {\n    ?dataset jpo:hasProfile/jpo:hasSample/jpo:species/rdfs:seeAlso/rdfs:subClassOf+ ?species .\n  }\n";
+   // avoid property path bug of virtuoso ( multi species + disease )
+   /* code_dataset  += `  ?dataset jpo:hasProfile / jpo:hasSample / jpo:species [
+    rdfs:seeAlso | ( rdfs:seeAlso / rdfs:subClassOf+) ?species
+  ] . */
+   // avoid multi values bug
+   code_dataset += `  {
+    SELECT DISTINCT ?tax
+    {
+      ` + code_species_value + `
+      [] jpo:species ?tax .
+      ?tax rdfs:seeAlso / rdfs:subClassOf* ?species .
+    }
+  }
+  ?dataset jpo:hasProfile / jpo:hasSample / jpo:species ?tax .
+`;
   } 
   if(sample_type){
     code_value += "  VALUES ?sample_type { " + StoA(sample_type).join(" ") + " }\n";
@@ -168,11 +182,14 @@ async ({species_s, disease_s}) => {
   if(disease || get_ids.disease){	
     code_value += "  VALUES ?disease { ";
     if(disease)         code_value += StoA(disease).join(" ");
-    if(get_ids.disease) code_value += get_ids.disease;
+    if(get_ids.disease) code_value += " " + get_ids.disease;
     code_value += " }\n";
-   // avoid property path bug of virtuoso ( multi species + disease )
    // code_dataset  += "  ?dataset jpo:hasProfile/jpo:hasSample/((jpo:disease/rdfs:subClassOf)|jpo:diseaseClass) ?disease .\n";
-    code_dataset  += "{\n    ?dataset jpo:hasProfile/jpo:hasSample/jpo:disease/rdfs:subClassOf* ?disease .\n  } UNION {\n    ?dataset jpo:hasProfile/jpo:hasSample/jpo:diseaseClass ?disease .\n  }\n";
+   // avoid property path bug of virtuoso ( multi species + disease )
+    code_dataset  += `  ?dataset jpo:hasProfile / jpo:hasSample [
+     jpo:disease | jpo:diseaseClass | ((jpo:disease | jpo:diseaseClass) / rdfs:subClassOf+) ?disease
+  ] .
+`;
   } 
   if(modification){
     code_value += "  VALUES ?modification { " + StoA(modification).join(" ") + " }\n";

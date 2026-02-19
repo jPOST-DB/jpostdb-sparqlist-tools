@@ -1,5 +1,10 @@
 # dataset table (for DB interface) req. dbi_make_filter_code
 
+* 遅いので sparql クエリ分割
+  * 必要な offset limit 分だけ別クエリで取得
+  * javascript セクションで必要な sparql json 形式を返す
+  * line count のときは unless でスキップ
+  
 ## Parameters
 
 * `datasets` (Opt.)
@@ -81,7 +86,7 @@ async ({datasets, species, species_s, sample_type, cell_line, organ, disease, di
   if(offset) params.push("offset=" + offset );
   
   var res = await sparqlet("dbi_make_filter_code", params.join("&"));
-  res.select_line = "DISTINCT ?dataset_id ?project_id ?project_title ?project_date ?species_label ?protein_count ?spectrum_count";
+  res.select_line = "DISTINCT ?dataset_id ?project_id ?project_date ?species_label ?protein_count ?spectrum_count";
   if(line_count){
     res.select_line = "(COUNT(DISTINCT ?dataset_id) AS ?line_count)";
     res.code_limit = "";
@@ -94,7 +99,7 @@ async ({datasets, species, species_s, sample_type, cell_line, organ, disease, di
 
 {{SPARQLIST_EP}}
 
-## `dataset_items`
+## `dataset`
 
 ```sparql
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -114,6 +119,44 @@ SELECT {{filter.select_line}}
 WHERE {
 {{filter.code_value}}
   ?dataset a jpo:Dataset ;
+           dct:identifier ?dataset_id .
+{{filter.code_dataset}}
+}
+{{filter.code_limit}}
+```
+
+## `query_code`
+```javascript
+({line_count, dataset, filter}) => {
+  if (line_count) return 0;
+  return {
+    values: dataset.results.bindings.map(d => ":" + d.dataset_id.value).join(" "),
+    order: filter.code_limit.replace("OFFSET", "#OFFSET").replace("LIMIT", "#LIMIT")
+  }
+}
+```
+
+## `info`
+
+```sparql
+PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX jpo: <http://rdf.jpostdb.org/ontology/jpost.owl#>
+PREFIX obo: <http://purl.obolibrary.org/obo/>
+PREFIX ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#>
+PREFIX unimod: <http://www.unimod.org/obo/unimod.obo#>
+PREFIX uniprot: <http://purl.uniprot.org/core/>
+PREFIX tax: <http://purl.bioontology.org/ontology/NCBITAXON/>
+PREFIX owl: <http://www.geneontology.org/formats/oboInOwl#>
+PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX : <http://rdf.jpostdb.org/entry/>
+SELECT {{filter.select_line}}
+WHERE {
+  {{#unless line_count}}
+  VALUES ?dataset { {{query_code.values}} }
+  ?dataset a jpo:Dataset ;
            dct:identifier ?dataset_id ;
            sio:SIO_000216 [ a jpo:NumOfLeadingProteins ;
                           sio:SIO_000300 ?protein_count ] ;
@@ -123,9 +166,16 @@ WHERE {
   FILTER (LANG(?species_label) = 'en') 
   ?project jpo:hasDataset ?dataset ;
            dct:identifier ?project_id ;
-           # dct:title ?project_title ; # 今は使ってないし、ここだけ何故か遅いのでコメントアウト
            dct:date ?project_date .
-{{filter.code_dataset}}
+  {{/unless}}
 }
-{{filter.code_limit}}
+{{query_code.order}}
+```
+
+## `dataset_items`
+```javascript
+({line_count, dataset, info}) => {
+  if (line_count) return dataset;
+  return info;
+}
 ```
