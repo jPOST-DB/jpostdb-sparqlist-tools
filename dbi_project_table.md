@@ -97,7 +97,7 @@ async ({datasets, species, species_s, sample_type, cell_line, organ, disease, di
 ## `dataset_items`
 
 ```sparql
-DEFINE sql:select-option "order"
+#DEFINE sql:select-option "order"
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX dct: <http://purl.org/dc/terms/>
