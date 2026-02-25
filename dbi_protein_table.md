@@ -1,9 +1,10 @@
-# protein table (for DB interface) req. 'dbi_make_filter_code'
+# [Develop] protein table (for DB interface) req. 'dbi_make_filter_code'
 
 * OPTIONAL の中が多いと遅いので sparql クエリ分割
   * 必要な offset limit 分だけ別クエリで取得
   * 一つの sparql json 形式に加工して返す
   * line count のときは unless でスキップ
+  * todo: keyword filtering
 
 ## Parameters
 
@@ -135,6 +136,7 @@ WHERE {
       ?dataset jpo:hasProtein ?db_prt .
       ?db_prt a obo:MS_1002401 ;
               jpo:hasDatabaseSequence ?protein .
+      {{filter.code_protein}}
     }
   }
   ?protein ^jpo:hasDatabaseSequence/rdfs:label ?accession .
@@ -144,7 +146,6 @@ WHERE {
   }
   {{/unless}}
   FILTER (! REGEX (?accession, "corona"))
-{{filter.code_protein}}
 }
 {{filter.code_limit}}
 ```

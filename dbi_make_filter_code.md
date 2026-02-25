@@ -101,20 +101,20 @@ async ({species_s, disease_s}) => {
     var ids = [];
     var labels = [];
     var a = decodeURIComponent(string).split(",");
-    for(var i = 0; i < a.length; i++){
-      if(ds_id) a[i] = ds_id + a[i];
-      if(q) a[i] = "'" + a[i] + "'";
-      if(a[i].match(/^DS\d+_\d+$/)      ||
-         a[i].match(/^PRT\d+_\d+_\w+$/) ||
-         a[i].match(/^PEP\d+_\d+_\d+$/))  ids.push(":" + a[i]);
-      else if(a[i].match(/^TAX_\d+$/))    ids.push(a[i].replace(/^TAX_/, "tax:"));
-      else if(a[i].match(/^C\d+$/))       ids.push("ncit:" + a[i]); 	
-      else if(a[i].match(/^UNIMOD_\d+$/)) ids.push("unimod:" + a[i]);     
-      else if(a[i].match(/^JPO_\d+$/))    ids.push("jpo:" + a[i]);
-      else if(a[i].match(/^CLO*_\d+$/))   ids.push("obo:" + a[i]); 
-      else if(a[i].match(/^DOID_\d+$/))   ids.push("obo:" + a[i]); 	
-      else if(a[i].match(/^MS_\d+$/))     ids.push("obo:" + a[i]);
-      else ids.push(a[i]);
+    for (var i = 0; i < a.length; i++) {
+      if (ds_id) a[i] = ds_id + a[i];
+      if (q) a[i] = "'" + a[i] + "'";
+      if (a[i].match(/^DS\d+_\d+$/)      ||
+          a[i].match(/^PRT\d+_\d+_\w+$/) ||
+          a[i].match(/^PEP\d+_\d+_\d+$/))  ids.push(":" + a[i]);
+      else if (a[i].match(/^TAX_\d+$/))    ids.push(a[i].replace(/^TAX_/, "tax:"));
+      else if (a[i].match(/^C\d+$/))       ids.push("ncit:" + a[i]); 	
+      else if (a[i].match(/^UNIMOD_\d+$/)) ids.push("unimod:" + a[i]);     
+      else if (a[i].match(/^JPO_\d+$/))    ids.push("jpo:" + a[i]);
+      else if (a[i].match(/^CLO*_\d+$/))   ids.push("obo:" + a[i]); 
+      else if (a[i].match(/^DOID_\d+$/))   ids.push("obo:" + a[i]); 	
+      else if (a[i].match(/^MS_\d+$/))     ids.push("obo:" + a[i]);
+      else if (a[i]) ids.push(a[i]);
     }
     return ids;
   };
@@ -219,10 +219,11 @@ async ({species_s, disease_s}) => {
   }
   if (protein_keywords) {
     var array = StoA(protein_keywords);
-  //  code += "  ?protein (dct:description|dct:title|dct:identifier|(jpo:hasDataset/dct:identifier)|(jpo:hasDataset/jpo:hasProfile/jpo:hasSample/rdfs:comment)) ?protein_search_space .\n";	
+    code_protein += "  ?protein (^jpo:hasDatabaseSequence / rdfs:label) | uniprot:mnemonic | (uniprot:sequence / rdf:value) | (uniprot:recommendedName / uniprot:fullName) | (uniprot:submittedName / uniprot:fullName) ?protein_search_space .\n";	
     code_protein += "  FILTER( true\n"
     for(var i = 0; i < array.length; i++){
-      code_protein += "      && REGEX( CONCAT(STR(?sequence),' ',STR(?accession), ' ', STR(?mnemonic), ' ', STR(?full_name), ' ', STR(?gene_name)), '" + array[i] + "', 'i' )\n";
+      // code_protein += "      && REGEX( CONCAT(STR(?sequence),' ',STR(?accession), ' ', STR(?mnemonic), ' ', STR(?full_name), ' ', STR(?gene_name)), '" + array[i] + "', 'i' )\n";
+      code_protein += "      && REGEX( ?protein_search_space, '" + array[i] + "', 'i' )\n";
     }
     code_protein += "  )\n";
   }

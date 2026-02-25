@@ -98,6 +98,7 @@ WHERE {
 {{filter.code_up_label}}
       ?db_protein jpo:hasDatabaseSequence ?protein ;
                   rdfs:label ?accession .
+      {{filter.code_protein}}
     }
   }
 
@@ -114,7 +115,6 @@ WHERE {
   }
              
 {{filter.code_peptide_value}}
-{{filter.code_protein}}
   {
     ?db_protein jpo:hasPeptideEvidence/jpo:hasPeptide ?peptide .
   } UNION {

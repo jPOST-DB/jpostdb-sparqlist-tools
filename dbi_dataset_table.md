@@ -1,9 +1,10 @@
-# dataset table (for DB interface) req. dbi_make_filter_code
+# [Develop] dataset table (for DB interface) req. dbi_make_filter_code
 
 * 遅いので sparql クエリ分割
   * 必要な offset limit 分だけ別クエリで取得
   * javascript セクションで必要な sparql json 形式を返す
   * line count のときは unless でスキップ
+  * todo: add keyword filtering
   
 ## Parameters
 
@@ -96,7 +97,6 @@ async ({datasets, species, species_s, sample_type, cell_line, organ, disease, di
 ```
 
 ## Endpoint
-
 {{SPARQLIST_EP}}
 
 ## `dataset`
@@ -119,7 +119,8 @@ SELECT {{filter.select_line}}
 WHERE {
 {{filter.code_value}}
   ?dataset a jpo:Dataset ;
-           dct:identifier ?dataset_id .
+           dct:identifier ?dataset_id ;
+           ^jpo:hasDataset ?project .
 {{filter.code_dataset}}
 }
 {{filter.code_limit}}
