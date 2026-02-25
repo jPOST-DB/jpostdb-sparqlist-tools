@@ -86,7 +86,7 @@ async ({datasets, species, species_s, sample_type, cell_line, organ, disease, di
   if(offset) params.push("offset=" + offset );
   
   var res = await sparqlet("dbi_make_filter_code", params.join("&"));
-  res.select_line = "DISTINCT ?dataset_id ?project_id ?project_date ?species_label ?protein_count ?spectrum_count";
+  res.select_line = "DISTINCT ?dataset_id ?project_id ?project_title ?project_date ?species_label ?protein_count ?spectrum_count";
   if(line_count){
     res.select_line = "(COUNT(DISTINCT ?dataset_id) AS ?line_count)";
     res.code_limit = "";
@@ -166,6 +166,7 @@ WHERE {
   FILTER (LANG(?species_label) = 'en') 
   ?project jpo:hasDataset ?dataset ;
            dct:identifier ?project_id ;
+           dct:title ?project_title ;
            dct:date ?project_date .
   {{/unless}}
 }

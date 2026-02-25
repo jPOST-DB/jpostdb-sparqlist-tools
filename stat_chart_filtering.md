@@ -149,7 +149,7 @@ ORDER BY DESC (?count)
   },
   html: hbs(`
    <script src="https://cdn.jsdelivr.net/npm/@webcomponents/webcomponentsjs@1.3.0/webcomponents-loader.js" crossorigin=""></script>
-   <link rel="import" href="https://tools.jpostdb.org/ts/stanza/stat_pie_chart/">
+   <link rel="import" href="https://{{SPARQLIST_STG}}.jpostdb.org/ts/stanza/stat_pie_chart/">
    <togostanza-stat_pie_chart type='{{type}}' species='{{species}}' species_s='{{species_s}}' sample_type='{{sample_type}}' cell_line='{{cell_line}}' organ='{{organ}}' disease='{{disease}}' disease_s='{{disease_s}}' modification='{{modification}}' instrument='{{instrument}}'></togostanza-stat_pie_chart>
   `)
 })
