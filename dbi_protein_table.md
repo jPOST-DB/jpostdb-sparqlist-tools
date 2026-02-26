@@ -1,10 +1,9 @@
-# [Develop] protein table (for DB interface) req. 'dbi_make_filter_code'
+# Protein table (for DB interface) req. 'dbi_make_filter_code'
 
 * OPTIONAL の中が多いと遅いので sparql クエリ分割
   * 必要な offset limit 分だけ別クエリで取得
   * 一つの sparql json 形式に加工して返す
   * line count のときは unless でスキップ
-  * todo: keyword filtering
 
 ## Parameters
 

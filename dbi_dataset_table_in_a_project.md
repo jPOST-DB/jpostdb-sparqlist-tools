@@ -1,5 +1,10 @@
 # dataset table in a project (for DB interface)
 
+* 遅いので sparql クエリ分割
+  * 必要な offset limit 分だけ別クエリで取得
+  * javascript セクションで必要な sparql json 形式を返す
+  * line count のときは unless でスキップ
+
 ## Parameters
 
 * `project` (Opt.)
@@ -41,13 +46,13 @@ async ({limit, offset, line_count}) => {
     res.select_line = "(COUNT(DISTINCT ?dataset_id) AS ?line_count)";
     res.code_limit = "";
   } else {
-    res.select_line = 'DISTINCT ?dataset_id ?species ?sample_type ?cell_line ?organ ?disease_class ?disease ?fractionation ?protein_count ?peptide_count ?spectrum_count ?rawdata_count ?note (GROUP_CONCAT(distinct ?mod ; separator = ", ") AS ?modification) (GROUP_CONCAT(distinct ?raw ; separator = ", ") AS ?raw_file_name) ?raw_file_url';
+    res.select_line = 'DISTINCT ?dataset_id ?species ?sample_type ?cell_line ?organ ?disease_class ?disease ?fractionation ?note (GROUP_CONCAT(distinct ?mod ; separator = ", ") AS ?modification) (GROUP_CONCAT(distinct ?raw ; separator = ", ") AS ?raw_file_name) ?raw_file_url';
   }
   return res;
 };
 ```
 
-## `dataset_items`
+## `info`
 
 ```sparql
 PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
@@ -69,19 +74,10 @@ WHERE {
   ?dataset a jpo:Dataset ;
            dct:identifier ?dataset_id ;
            jpo:hasProfile/jpo:hasSample ?sample ;
-           sio:SIO_000216 [ a jpo:NumOfLeadingProteins ;
-                          sio:SIO_000300 ?protein_count ] ;
-           sio:SIO_000216 [ a jpo:NumOfPeptides ;
-                              sio:SIO_000300 ?peptide_count ] ;
-           sio:SIO_000216 [ a jpo:NumOfSpectra ;
-                              sio:SIO_000300 ?spectrum_count ] ;
-            sio:SIO_000216 [ a jpo:NumOfRawData ;
-                              sio:SIO_000300 ?rawdata_count ] ;
+           ^jpo:hasDataset / dct:identifier ?project_id ;
            jpo:hasProfile/jpo:hasRawData/rdfs:label ?raw .
   ?sample jpo:species/rdfs:seeAlso/skos:prefLabel ?species .
   FILTER (LANG(?species) = 'en') 
-  ?project jpo:hasDataset ?dataset ;
-           dct:identifier ?project_id .
   OPTIONAL { 
     ?sample jpo:sampleType/rdfs:label ?sample_type . 
   }
@@ -123,4 +119,58 @@ WHERE {
   BIND(CONCAT('https://repository.jpostdb.org/entry/', ?project_id) AS ?raw_file_url)
 }
 {{filter.code_limit}}
+```
+
+## `datasets`
+```javascript
+({line_count, info}) => {
+  if (line_count) return 0;
+  return ":" + info.results.bindings.map(d => d.dataset_id.value).join(" :");
+}
+```
+
+## `count`
+```sparql
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX jpo: <http://rdf.jpostdb.org/ontology/jpost.owl#>
+PREFIX sio: <http://semanticscience.org/resource/>
+PREFIX : <http://rdf.jpostdb.org/entry/>
+SELECT ?dataset_id ?protein_count ?peptide_count ?spectrum_count ?rawdata_count
+WHERE {
+  {{#unless line_count}}
+  VALUES ?dataset { {{datasets}} }
+  ?dataset dct:identifier ?dataset_id ;
+           sio:SIO_000216 [ a jpo:NumOfLeadingProteins ;
+                          sio:SIO_000300 ?protein_count ] ;
+           sio:SIO_000216 [ a jpo:NumOfPeptides ;
+                              sio:SIO_000300 ?peptide_count ] ;
+           sio:SIO_000216 [ a jpo:NumOfSpectra ;
+                              sio:SIO_000300 ?spectrum_count ] ;
+           sio:SIO_000216 [ a jpo:NumOfRawData ;
+                              sio:SIO_000300 ?rawdata_count ] .
+  {{/unless}}
+}
+```
+
+## `dataset_items`
+```javascript
+({line_count, info, count}) => {
+  if (line_count) return info;
+  let ds2count = {};
+  count.results.bindings.forEach(d => {
+    ds2count[d.dataset_id.value] = {
+      protein_count: d.protein_count,
+      peptide_count: d.peptide_count,
+      spectrum_count: d.spectrum_count,
+      rawdata_count: d.rawdata_count
+    };
+  });
+  return info.results.bindings.map(d => {
+    d.protein_count = ds2count[d.dataset_id.value].protein_count;
+    d.peptide_count = ds2count[d.dataset_id.value].peptide_count;
+    d.spectrum_count = ds2count[d.dataset_id.value].spectrum_count;
+    d.rawdata_count = ds2count[d.dataset_id.value].rawdata_count;
+    return d;
+  });
+}
 ```

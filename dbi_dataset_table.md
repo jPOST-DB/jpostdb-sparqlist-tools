@@ -1,10 +1,9 @@
-# [Develop] dataset table (for DB interface) req. dbi_make_filter_code
+# Dataset table (for DB interface) req. dbi_make_filter_code
 
 * 遅いので sparql クエリ分割
   * 必要な offset limit 分だけ別クエリで取得
   * javascript セクションで必要な sparql json 形式を返す
   * line count のときは unless でスキップ
-  * todo: add keyword filtering
   
 ## Parameters
 
