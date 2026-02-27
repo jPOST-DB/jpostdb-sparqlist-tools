@@ -165,12 +165,13 @@ WHERE {
       rawdata_count: d.rawdata_count
     };
   });
-  return info.results.bindings.map(d => {
-    d.protein_count = ds2count[d.dataset_id.value].protein_count;
-    d.peptide_count = ds2count[d.dataset_id.value].peptide_count;
-    d.spectrum_count = ds2count[d.dataset_id.value].spectrum_count;
-    d.rawdata_count = ds2count[d.dataset_id.value].rawdata_count;
-    return d;
-  });
+  for (let i = 0; i < info.results.bindings.length; i++) {
+    const dataset_id = info.results.bindings[i].dataset_id.value;
+    info.results.bindings[i].protein_count = ds2count[dataset_id].protein_count;
+    info.results.bindings[i].peptide_count = ds2count[dataset_id].peptide_count;
+    info.results.bindings[i].spectrum_count = ds2count[dataset_id].spectrum_count;
+    info.results.bindings[i].rawdata_count = ds2count[dataset_id].rawdata_count;
+  }
+  return info;
 }
 ```
