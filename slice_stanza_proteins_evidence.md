@@ -46,9 +46,10 @@ WHERE {
 ```javascript
 ({taxonomy}) => {
   let code = "?protein uniprot:existence ?exist .";
-  if(taxonomy.results.bindings[0].tax.value.match(/identifiers\.org\/taxonomy\/9606$/)){
-    code = "?next skos:exactMatch ?protein ;\nnext:existence ?exist .";
-  }
+  // old code for nextprot
+  // if(taxonomy.results.bindings[0].tax.value.match(/identifiers\.org\/taxonomy\/9606$/)){
+  //  code = "?next skos:exactMatch ?protein ;\nnext:existence ?exist .";
+  // }
   return  {code: code};
 };
 ```

@@ -49,9 +49,10 @@ WHERE {
 ({dataset, evidence, taxonomy}) => {
   var array = decodeURIComponent(dataset).split(" ");
   var code = "?up uniprot:existence uniprot:" + evidence + "_Existence .";
-  if(taxonomy.results.bindings[0].tax.value.match(/\/taxonomy\/9606$/)){
-    code = "?next skos:exactMatch ?up ;\n    next:existence next:" + evidence.charAt(0).toUpperCase() + evidence.slice(1).toLowerCase() + " .";
-  }
+  // old code for nextprot
+  // if(taxonomy.results.bindings[0].tax.value.match(/\/taxonomy\/9606$/)){
+  //  code = "?next skos:exactMatch ?up ;\n    next:existence next:" + evidence.charAt(0).toUpperCase() + evidence.slice(1).toLowerCase() + " .";
+  // }
   return  {values: ":" + array.join(" :"), code: code};
 };
 ```

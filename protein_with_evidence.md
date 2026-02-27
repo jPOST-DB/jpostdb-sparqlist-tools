@@ -3,7 +3,7 @@
 ## Parameters
 
 * `dataset`
-  * default: DS810_1
+  * default: DS1631_1
 * `evidence`
   * default: Evidence_At_Transcript_Level
 * `level`
@@ -48,9 +48,10 @@ WHERE {
 ```javascript
 ({evidence, get_tax}) => {
   var code = "?up uniprot:existence uniprot:" + evidence + "_Existence .";
-  if(get_tax.results.bindings[0].tax.value.match(/identifiers\.org\/taxonomy\/9606$/)){
-    code = "?next skos:exactMatch ?up;\nnext:existence next:" + evidence.charAt(0).toUpperCase() + evidence.slice(1).toLowerCase() + " .";
-  }
+ // old code for nextprot
+ // if(get_tax.results.bindings[0].tax.value.match(/identifiers\.org\/taxonomy\/9606$/)){
+ //   code = "?next skos:exactMatch ?up;\nnext:existence next:" + evidence.charAt(0).toUpperCase() + evidence.slice(1).toLowerCase() + " .";
+ // }
   return  {code: code};
 };
 ```

@@ -3,7 +3,7 @@
 ## Parameters
 
 * `dataset` (Req.)
-  * default: DS810_1
+  * default: DS1631_1
 * `level` (Req.)
   * default: 2
   * example: 1: protein, 2: leading protein, 3: protein with uniquq-pep
@@ -46,9 +46,10 @@ WHERE {
 ```javascript
 ({get_tax}) => {
   var code = "?up uniprot:existence ?exist .";
-  if(get_tax.results.bindings[0].tax.value.match(/identifiers\.org\/taxonomy\/9606$/)){
-    code = "?next skos:exactMatch ?up ;\nnext:existence ?exist .";
-  }
+  // old code for nextprot
+  // if(get_tax.results.bindings[0].tax.value.match(/identifiers\.org\/taxonomy\/9606$/)){
+  //  code = "?next skos:exactMatch ?up ;\nnext:existence ?exist .";
+  // }
   return  {code: code};
 };
 ```
