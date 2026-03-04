@@ -47,6 +47,7 @@ async ({limit, offset, line_count}) => {
     res.code_limit = "";
   } else {
     res.select_line = 'DISTINCT ?dataset_id ?species ?sample_type ?cell_line ?organ ?disease_class ?disease ?fractionation ?note (GROUP_CONCAT(distinct ?mod ; separator = ", ") AS ?modification) (GROUP_CONCAT(distinct ?raw ; separator = ", ") AS ?raw_file_name) ?raw_file_url';
+    res.code_limit = "GROUP BY ?dataset_id ?species ?sample_type ?cell_line ?organ ?disease_class ?disease ?fractionation ?note ?raw_file_url\n" + res.code_limit;
   }
   return res;
 };

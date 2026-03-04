@@ -3,7 +3,7 @@
 ## Parameters
 
 * `dataset` (Req.)
-  * default: DS81_1
+  * default: DS1631_1
 * `level` (Req.)
   * default: 2
   * example: 1: protein, 2: leading protein, 3: protein with uniquq-pep
@@ -70,6 +70,7 @@ WHERE {
   ?level rdfs:subClassOf obo:{{filter.go}} .
   ?level rdfs:label "{{term}}" . #^^xsd:string .
 }
+GROUP BY ?upid ?name ?symbol
 ORDER BY DESC (?pep_count) ?name
 ```
 

@@ -55,6 +55,7 @@ WHERE {
                                                                                                             jpo:modificationClass jpo:JPO_022 ] .
   FILTER (?ptm = ?mod) 
 }
+GROUP BY ?mod ?mod_label
 ORDER BY DESC (?count)
 ```
 

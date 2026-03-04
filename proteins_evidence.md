@@ -77,6 +77,7 @@ WHERE {
            jpo:hasDatabaseSequence ?up .
   {{filter2.code}}
 }
+GROUP BY ?exist
 ```
 
 ## `return`

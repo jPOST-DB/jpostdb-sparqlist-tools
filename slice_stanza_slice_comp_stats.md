@@ -1,4 +1,4 @@
-# Develop: statistics for slice comparison w/ protein estimation (for Stanza 'slice_comp_stats')
+# statistics for slice comparison w/ protein estimation (for Stanza 'slice_comp_stats')
 
 ## Parameters
 

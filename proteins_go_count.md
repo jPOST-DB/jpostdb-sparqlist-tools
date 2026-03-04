@@ -50,7 +50,7 @@ PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX jpost: <http://rdf.jpostdb.org/ontology/jpost.owl#>
 PREFIX : <http://rdf.jpostdb.org/entry/>
-SELECT DISTINCT ?label (COUNT (DISTINCT ?up) AS ?count)
+SELECT ?label (COUNT (DISTINCT ?up) AS ?count)
 WHERE {
   VALUES ?dataset { {{filter.values}} }
   ?dataset jpost:hasProtein ?protein .
@@ -65,6 +65,7 @@ WHERE {
   #FILTER (DATATYPE(?label) = xsd:string)
   # FILTER (LANG (?label) = "en")
 }
+GROUP BY ?label
 ORDER BY DESC(?count)
 ```
 

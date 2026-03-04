@@ -39,6 +39,7 @@ WHERE {
   ?protein jpo:hasDatabaseSequence ?up .
   ?up uniprot:proteome ?chr .
 }
+GROUP BY ?chr
 ```
 
 ## `proteome`
@@ -95,6 +96,7 @@ WHERE {
   ?up uniprot:proteome ?chr .
   {{proteome.database}}
 }
+GROUP BY ?chr
 ```
 
 ## Endpoint
@@ -116,6 +118,7 @@ WHERE {
   {{proteome.database}}
   FILTER( REGEX( STR(?chr), "/{{proteome.id}}#"))
 }
+GROUP BY ?chr
 ```
 
 ## `return`

@@ -1,4 +1,4 @@
-# Develop: protein with go term for slice stanza w/ protein estimation (original: protein_with_go_term) (for Stanza 'go_count')
+# protein with go term for slice stanza w/ protein estimation (original: protein_with_go_term) (for Stanza 'go_count')
 
 ## Parameters
 
@@ -80,6 +80,7 @@ WHERE {
   ?level rdfs:subClassOf obo:{{filter.go}} .
   ?level rdfs:label "{{term}}"^^xsd:string .
 }
+GROUP BY ?upid ?name ?symbol
 ORDER BY DESC (?pep_count) ?name
 ```
 

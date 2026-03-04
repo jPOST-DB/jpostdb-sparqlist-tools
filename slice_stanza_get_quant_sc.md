@@ -1,4 +1,4 @@
-# Develop: quantitative values w/ protein estimation (spectral counting) (for Stanza 'group_comp')
+# quantitative values w/ protein estimation (spectral counting) (for Stanza 'group_comp')
 
 ## Parameters
 
@@ -81,6 +81,7 @@ WHERE {
            rdfs:label ?upid .
   ?protein rdfs:label ?leading_accs .
 }
+GROUP BY ?dsid ?upid
 ```
 
 ## `to_table`

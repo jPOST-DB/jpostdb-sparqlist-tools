@@ -76,6 +76,7 @@ WHERE {
   ?iso a uniprot:Simple_Sequence ;
           rdf:value ?seq .
 }
+GROUP BY ?up ?iso ?seq
 ORDER BY ?iso
 ```
 
@@ -100,6 +101,7 @@ WHERE {
                        rdf:value ?seq ] ;
        jpo:hasPsm ?psm .
 }
+GROUP BY ?seq
 ```
 
 ## Endpoint

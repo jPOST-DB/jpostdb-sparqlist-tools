@@ -33,7 +33,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 SELECT DISTINCT ?up ?go ?go_label
 WHERE {
 VALUES ?up { {{filter.values}} }
-  ?up uniprot:reviewed 1 ;
+  ?up uniprot:reviewed true ;
        uniprot:classifiedWith/rdfs:subClassOf* ?go .
   FILTER (REGEX (STR (?go), "obo/GO_"))
   ?go rdfs:label ?go_label ;

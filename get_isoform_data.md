@@ -109,6 +109,7 @@ WHERE {
                            rdf:value ?seq ] ;
        jpo:hasPsm ?psm .
 }
+GROUP BY ?seq
 ```
 
 ## `get_seq_prt`
@@ -151,6 +152,7 @@ WHERE {
        jpo:hasPeptideEvidence/jpo:hasPeptide/jpo:hasSequence [ a obo:MS_1001344 ;
                                                                  rdf:value ?seq ] .
 }
+GROUP BY ?seq
 ```
 
 ##  `up_to_tax`

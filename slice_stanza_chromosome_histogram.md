@@ -56,6 +56,7 @@ WHERE {
            uniprot:organism <{{taxonomy.results.bindings.[0].tax.value}}> ;
            uniprot:proteome ?chr .
 }
+GROUP BY ?chr
 ```
 
 ## `proteome`

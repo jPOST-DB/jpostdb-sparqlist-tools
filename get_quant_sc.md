@@ -46,6 +46,7 @@ WHERE {
            rdfs:label ?leading_accs .
   ?protein rdfs:label ?leading_accs .
 }
+GROUP BY ?dsid ?upid
 ```
 
 ## `to_table`

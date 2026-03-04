@@ -69,6 +69,7 @@ WHERE {
              ] . 
   }
 }
+GROUP BY ?project_id ?title ?description ?note ?rpxd
 ```
 
 ## `return`

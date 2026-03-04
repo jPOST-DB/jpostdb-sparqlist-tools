@@ -50,6 +50,7 @@ WHERE {
                                       faldo:end/faldo:position ?end ] ;
           jpo:hasPeptide/jpo:hasPsm ?psm .
 }
+GROUP BY ?begin ?end
 ORDER BY ?begin ?end
 ```
 
@@ -87,6 +88,7 @@ WHERE {
   BIND (?position_a + ?begin -1 AS ?pos_a)
   BIND (?position_b + ?begin -1 AS ?pos_b)
 }
+GROUP BY ?pos_a ?pos_b ?site_a ?site_b ?psm
 ORDER BY ?pos_a ?pos_b
 ```
 

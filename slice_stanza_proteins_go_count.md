@@ -1,4 +1,4 @@
-# Develop: protein go count for slice stanza w/ protein estimation (originsl: proteins_go_count) (for Stanza' go_count')
+# protein go count for slice stanza w/ protein estimation (originsl: proteins_go_count) (for Stanza' go_count')
 
 ## Parameters
 

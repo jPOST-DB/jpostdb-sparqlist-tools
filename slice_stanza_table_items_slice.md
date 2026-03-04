@@ -1,4 +1,4 @@
-# Develop: table items slice for slice stanza w/ protein estimation (original: table_items_slice) (for Stanza 'table_slice')
+# table items slice for slice stanza w/ protein estimation (original: table_items_slice) (for Stanza 'table_slice')
 
 ## Parameters
 
@@ -73,6 +73,7 @@ WHERE {
 {{filter.value}}
   ?dataset  jpo:hasProfile/jpo:hasSample/jpo:species/rdfs:seeAlso*/skos:prefLabel ?label .
 }
+GROUP BY ?label
 ORDER BY DESC (?count)
 ```
 
@@ -90,6 +91,7 @@ WHERE {
 {{filter.value}}
   ?dataset  jpo:hasProfile/jpo:hasSample/jpo:diseaseClass/rdfs:label ?label .
 }
+GROUP BY ?label
 ORDER BY DESC (?count)
 ```
 
@@ -107,6 +109,7 @@ WHERE {
 {{filter.value}}
   ?dataset  jpo:hasProfile/jpo:hasSample/jpo:organ/rdfs:label ?label .
 }
+GROUP BY ?label
 ORDER BY DESC (?count)
 ```
 

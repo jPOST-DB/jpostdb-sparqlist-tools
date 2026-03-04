@@ -1,4 +1,4 @@
-# Develop: protein table for slice w/ protein estimation (for DB interface) (original: dbi_protein_table)
+# protein table for slice w/ protein estimation (for DB interface) (original: dbi_protein_table)
 
 ## Parameters
 

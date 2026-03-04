@@ -51,6 +51,7 @@ WHERE {
                            rdf:value ?seq ] ;
        jpo:hasPsm ?psm .
 }
+GROUP BY ?seq ?begin ?end
 ORDER BY ?begin ?end
 ```
 
@@ -85,6 +86,7 @@ WHERE {
          jpo:modificationSite ?site .
   BIND (?position + ?begin -1 AS ?pos)
 }
+GROUP BY ?mods ?mod_label ?site ?pos
 ORDER BY ?pos
 ```
 

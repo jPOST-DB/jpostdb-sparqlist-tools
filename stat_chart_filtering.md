@@ -104,7 +104,7 @@ PREFIX tax: <http://purl.bioontology.org/ontology/NCBITAXON/>
 PREFIX unimod: <http://www.unimod.org/obo/unimod.obo#>
 PREFIX jpo: <http://rdf.jpostdb.org/ontology/jpost.owl#>
 PREFIX : <http://rdf.jpostdb.org/entry/>
-SELECT DISTINCT ?label (COUNT (DISTINCT ?dataset) AS ?count) {{type_filter.replace}}
+SELECT ?label (COUNT (DISTINCT ?dataset) AS ?count) {{type_filter.replace}}
 WHERE {
   {{search_filter.code_value}}
   ?dataset a jpo:Dataset ;
@@ -116,6 +116,7 @@ WHERE {
   {{type_filter.filter}}
   {{search_filter.code_dataset}}
 }
+GROUP BY ?label ?ontology
 ORDER BY DESC (?count)
 ```
 

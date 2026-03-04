@@ -5,7 +5,7 @@
 * `dataset`
   * default: DS1631_1
 * `evidence`
-  * default: Evidence_At_Transcript_Level
+  * default: Evidence_at_Transcript_Level
 * `level`
   * default: 2
   * eaxmple: 1 2 3 # 1: Protein, 2: Leading protein, 3: Leading protein with unique peptide
@@ -41,6 +41,7 @@ WHERE {
   VALUES ?dataset { {{filter.values}} }
   ?dataset jpo:hasProfile/jpo:hasSample/jpo:species ?tax .
 }
+GROUP BY ?chr
 ```
 
 ## `filter2`
@@ -77,6 +78,7 @@ WHERE {
   ?protein jpo:hasDatabaseSequence ?up .
   ?up uniprot:proteome ?chr .
 }
+GROUP BY ?chr
 ```
 
 ## `proteome`
@@ -138,6 +140,7 @@ WHERE {
   FILTER(REGEX(STR(?chr), "{{proteome.id}}"))
   OPTIONAL { ?up (uniprot:recommendedName|uniprot:submittedName)/uniprot:fullName ?name . }
 }
+GROUP BY ?upid ?name ?symbol ?chr
 ORDER BY DESC (?pep_count) ?name
 ```
 
@@ -156,7 +159,7 @@ PREFIX next: <http://nextprot.org/rdf#>
 PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX : <http://rdf.jpostdb.org/entry/>
-SELECT DISTINCT ?upid (COUNT(DISTINCT ?pepseq) AS ?uniq_count)
+SELECT ?upid (COUNT(DISTINCT ?pepseq) AS ?uniq_count)
 WHERE {
   VALUES ?dataset { {{filter.values}} }
   ?dataset jpo:hasProtein ?protein .
@@ -170,7 +173,8 @@ WHERE {
                        rdf:value ?pepseq ] ;
        a jpo:UniquePeptideAtMsLevel .
 }
-ORDER BY ?name DESC (?pep_count)
+GROUP BY ?upid
+ORDER BY DESC (?uniq_count)
 ```
 
 ## `return`

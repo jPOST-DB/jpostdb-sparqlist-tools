@@ -57,6 +57,7 @@ WHERE {
  #   FILTER( ?uniq = jpo:UniquePeptideAtMsLevel) }
   OPTIONAL { ?psm jpo:hasMutation ?mutation }
 }
+GROUP BY ?begin ?end ?seq ?mutation ?tax 
 ORDER BY ?begin ?end
 ```
 

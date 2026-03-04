@@ -50,6 +50,7 @@ WHERE {
 {{filter.value}}
   ?dataset  jpo:hasProfile/jpo:hasSample/jpo:species/rdfs:seeAlso*/skos:prefLabel ?label .
 }
+GROUP BY ?label
 ORDER BY DESC (?count)
 ```
 
@@ -65,6 +66,7 @@ WHERE {
 {{filter.value}}
   ?dataset  jpo:hasProfile/jpo:hasSample/jpo:diseaseClass/rdfs:label ?label .
 }
+GROUP BY ?label
 ORDER BY DESC (?count)
 ```
 
@@ -80,6 +82,7 @@ WHERE {
 {{filter.value}}
   ?dataset  jpo:hasProfile/jpo:hasSample/jpo:organ/rdfs:label ?label .
 }
+GROUP BY ?label
 ORDER BY DESC (?count)
 ```
 

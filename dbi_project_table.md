@@ -82,6 +82,7 @@ async ({datasets, species, species_s, sample_type, cell_line, organ, disease, di
 
   var res = await sparqlet("dbi_make_filter_code", params.join("&"));
   res.select_line = "DISTINCT ?project_id ?project_title (GROUP_CONCAT(DISTINCT ?species_label_pre ; separator = \", \") AS ?species_label) (GROUP_CONCAT(DISTINCT ?species_label_pre ; separator = \", \") AS ?species_list) (COUNT(DISTINCT ?dataset) AS ?dataset_count)";
+  res.code_limit = "GROUP BY ?project_id ?project_title\n" + res.code_limit;
   if(line_count){
     res.select_line = "(COUNT(DISTINCT ?project_id) AS ?line_count)";
     res.code_limit = "";

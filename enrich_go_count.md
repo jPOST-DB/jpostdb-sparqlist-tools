@@ -25,11 +25,12 @@ FROM <http://jpost.org/graph/uniprot>
 FROM <http://jpost.org/graph/ontology> 
 WHERE {
   ?up uniprot:organism <http://purl.uniprot.org/taxonomy/{{tax}}> ;
-      uniprot:reviewed 1 ;
+      uniprot:reviewed true ;
       uniprot:classifiedWith/rdfs:subClassOf* ?go .
   FILTER (REGEX (STR (?go), "obo/GO_"))
   ?go <http://www.geneontology.org/formats/oboInOwl#hasOBONamespace> "{{go}}" . 
 }
+GROUP BY ?go
 ```
 
 ## `total`
@@ -43,7 +44,7 @@ FROM <http://jpost.org/graph/ontology>
 WHERE {
   ?up uniprot:organism <http://purl.uniprot.org/taxonomy/{{tax}}> ;
       uniprot:classifiedWith ?go ;
-      uniprot:reviewed 1 .
+      uniprot:reviewed true .
   FILTER (REGEX (STR (?go), "obo/GO_"))
   ?go <http://www.geneontology.org/formats/oboInOwl#hasOBONamespace> "{{go}}" . 
 }

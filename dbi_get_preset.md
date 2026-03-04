@@ -69,6 +69,7 @@ SELECT DISTINCT ?label ?object (COUNT(?object) AS ?count)
 WHERE {
 {{filter.code}}
 }
+GROUP BY ?label ?object
 {{filter.limit}}
 ```
 

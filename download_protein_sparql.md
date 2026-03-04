@@ -18,7 +18,7 @@
   var select_line ="SELECT DISTINCT ?protein_id ?accession ?symbol ?name ?protein_type ?pep_count ?psm_count (COUNT (DISTINCT ?uniq_pep) AS ?uniq_pep_count)";
   var limit_line = "";
   if(count) select_line = "SELECT (COUNT(?protein_id) AS ?count)";
-  else limit_line = "ORDER BY ?protein_type DESC(?pep_count) \nOFFSET " + offset + "\nLIMIT " + limit;
+  else limit_line = "GROUP BY ?protein_id ?accession ?symbol ?name ?protein_type ?pep_count ?psm_count\nORDER BY ?protein_type DESC(?pep_count) \nOFFSET " + offset + "\nLIMIT " + limit;
   return {select: select_line, limit: limit_line };
 };
 ```

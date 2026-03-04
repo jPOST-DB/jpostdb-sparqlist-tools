@@ -27,6 +27,7 @@ WHERE {
                                rdf:value ?sequence ] ;
        jpo:hasPsm ?psm .
 }
+GROUP BY ?id ?sequence
 ```
 
 ## `get_protein`

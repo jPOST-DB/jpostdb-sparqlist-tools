@@ -3,7 +3,7 @@
 ## Parameters
 
 * `dataset`
-  * default: DS810_1 DS810_2 DS811_1 DS811_2
+  * default: DS1631_1 DS1631_2 DS1631_3
 
 ## `json`
 
@@ -56,6 +56,7 @@ WHERE {
            uniprot:organism <{{taxonomy.results.bindings.[0].tax.value}}> ;
            uniprot:proteome ?chr .
 }
+GROUP BY ?chr
 ```
 
 ## `proteins`
@@ -78,6 +79,7 @@ WHERE {
            rdf:value ?seq .
   ?kegg uniprot:database <http://purl.uniprot.org/database/KEGG> .
 }
+GROUP BY ?kegg ?protein ?seq
 ```
 
 ## `return`

@@ -1,4 +1,4 @@
-# Develop: proteins evidence for slice stanza w/ protein estimation (original: proteins_evidence) (for Stanza 'proteins_evidence')
+# proteins evidence for slice stanza w/ protein estimation (original: proteins_evidence) (for Stanza 'proteins_evidence')
 
 ## Parameters
 

@@ -1,9 +1,10 @@
-# Mutated peptide list  (for Stanza 'protein_browser')
+# Develop
+* Mutated peptide list  (for Stanza 'protein_browser')
 
 ## Parameters
 
 * `uniprot` Uniprot ID (Req.)
-  * default: O75143
+  * default: Q01518
 * `dataset` (Opt.)
   * example: DS206_1 DS207_1 DS208_1
 * `pep_len` (Opt.)
@@ -38,7 +39,7 @@ PREFIX dct: <http://purl.org/dc/terms/>
 PREFIX jpo: <http://rdf.jpostdb.org/ontology/jpost.owl#>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX : <http://rdf.jpostdb.org/entry/> 
-SELECT ?begin ?end (COUNT (?begin) AS ?count) ?seq (SAMPLE(?pep_id) AS ?pep_id_sample) ?type ?shift ?ref ?mt ?mt_begin ?mt_end
+SELECT ?begin ?end (COUNT (?begin) AS ?count) ?seq (SAMPLE(?pep_id) AS ?pep_id_sample) ?type ?shift ?ref_aa ?mt_aa ?mt_begin ?mt_end
 WHERE {
 {{filter.value}}
 {{filter.code}}
@@ -56,22 +57,43 @@ WHERE {
 #    FILTER( ?uniq = jpo:UniquePeptideAtMsLevel) }
   ?psm jpo:hasMutation [ a ?type ;
                          jpo:shift ?shift ;
-                         jpo:referenceResidues ?ref ;
-                         jpo:mutatedResidues ?mt ;
+                         jpo:referenceResidues ?ref_aa ;
+                         jpo:mutatedResidues ?mt_aa ;
                        faldo:location/faldo:begin/faldo:position ?mt_begin ;
                        faldo:location/faldo:end/faldo:position ?mt_end ] .
 }
-ORDER BY ?begin ?end
+GROUP BY ?begin ?end ?seq ?type ?shift ?ref_aa ?mt_aa ?mt_begin ?mt_end
+ORDER BY ?begin ?end ?mt_begin
 ```
 
 ## `return`
 
 ```javascript
-({pep_len, get_mt_seq}) => {
-  var list = get_mt_seq.results.bindings;
-  psm_position = [];
+({get_mt_seq}) => {
+  var mt_list = get_mt_seq.results.bindings;
+  var obj = {};
+  for(var i = 0; i < mt_list.length; i++){
+    var seq = mt_list[i].seq.value;
+	 if(!obj[seq]){
+       obj[seq] = Object.assign({}, mt_list[i]);
+       obj[seq].mtd = [];
+     }         
+    obj[seq].mtd.push({
+      "shift": mt_list[i].shift.value,
+      "mt_begin": mt_list[i].mt_begin.value,
+      "mt_end": mt_list[i].mt_end.value,
+      "ref_aa": mt_list[i].ref_aa.value,
+      "mt_aa": mt_list[i].mt_aa.value,
+      "type": mt_list[i].type.value.replace(/.+#/, ""),
+    });
+  }
+  var list = [];
+  var keys = Object.keys(obj);
+  for(var i = 0; i < keys.length; i++){
+    list.push(obj[keys[i]]);
+  }
+  var psm_position = [];
   var len = 0;
-  if(pep_len) len = pep_len - 0;
   var max_count = 0;
   for(var i = 0; i < list.length; i++){
     if(list[i].seq.value.length < len) continue;
@@ -110,22 +132,17 @@ ORDER BY ?begin ?end
     var uniq = 0;
     if(list[i].uniq) uniq = 1;
     var label = list[i].seq.value;
-    if(list[i].type.value.replace(/.+#/, "") == "InFrameInsertion"){
-  //    label = label.substr(0, Number(list[i].mt_begin.value) - 1) + label.substr(Number(list[i].mt_begin.value), label.length - Number(list[i].mt_end.value) );
-    }else if(list[i].type.value.replace(/.+#/, "") == "InFrameDeletion"){
-	  label = label.substr(0, Number(list[i].mt_begin.value) - 1) + "-" + label.substr(Number(list[i].mt_begin.value) - 1, label.length - Number(list[i].mt_end.value) + 1);
+    for(var j = 0; j < list[i].mtd.length; j++){
+	  if(list[i].mtd[j].type == "InFrameDeletion"){
+	 	label = label.substr(0, Number(list[i].mtd[j].mt_begin) - 1) + "-" + label.substr(Number(list[i].mtd[j].mt_begin) - 1, label.length - Number(list[i].mt_end.value) + 1);
+      }	
+      list[i].mtd[j].y = y_axis;
     }
     psm_position.push({
       pep_id: list[i].pep_id_sample.value, 
       begin: list[i].begin.value, 
       end: list[i].end.value,
-      shift: list[i].shift.value,
-      mt_begin: list[i].mt_begin.value,
-      mt_end: list[i].mt_end.value,
-      ref_aa: list[i].ref.value,
-      mt_aa: list[i].mt.value,
-      type: list[i].type.value.replace(/.+#/, ""),
-    //  uniq: uniq,
+      mtd: list[i].mtd,
       color: color, 
       y: y_axis, 
       count: list[i].count.value,    
@@ -136,4 +153,3 @@ ORDER BY ?begin ?end
   return psm_position;
 };
 ```
-

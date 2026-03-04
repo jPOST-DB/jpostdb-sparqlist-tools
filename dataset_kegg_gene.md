@@ -40,7 +40,7 @@ WHERE {
                rdfs:label ?uniprot_id ;
                jpo:hasPeptideEvidence/jpo:hasPeptide/jpo:hasPsm/jpo:hasSpectrum ?spc ;
                jpo:hasDatabaseSequence ?up .
-      }
+      } GROUP BY ?uniprot_id ?up
     }
   ?up uniprot:sequence ?seqEnt ;
       rdfs:seeAlso ?kegg .

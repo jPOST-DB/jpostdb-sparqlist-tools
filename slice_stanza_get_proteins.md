@@ -1,4 +1,4 @@
-# Develop: get protein names for slice stanza (for Stanza 'slice_comparison' :quant_test)
+# get protein names for slice stanza (for Stanza 'slice_comparison' :quant_test)
 
 ## Parameters
 
