@@ -84,7 +84,7 @@ WHERE {
   }
   OPTIONAL { 
     ?sample jpo:cellLine/rdfs:label ?cell_line_tmp .
-    FILTER (LANG(?cell_line_tmp) = 'en' OR LANG(?cell_line_tmp) = '')
+    FILTER (LANG(?cell_line_tmp) = 'en' || LANG(?cell_line_tmp) = '')
     BIND(STR(?cell_line_tmp) AS ?cell_line) # delete lang 
   }
   OPTIONAL { 
@@ -92,12 +92,12 @@ WHERE {
   }
   OPTIONAL { 
     ?sample jpo:diseaseClass/rdfs:label ?disease_class_pre .
-    FILTER (LANG(?disease_class_pre) = 'en' OR LANG(?disease_class_pre) = '')
+    FILTER (LANG(?disease_class_pre) = 'en' || LANG(?disease_class_pre) = '')
     BIND (STR(?disease_class_pre) AS ?disease_class)
   }
   OPTIONAL { 
     ?sample jpo:disease/rdfs:label ?disease . 
-    FILTER (LANG(?disease) = 'en' OR LANG(?disease) = '')
+    FILTER (LANG(?disease) = 'en' || LANG(?disease) = '')
   }
   OPTIONAL { 
     ?sample rdfs:comment ?note . 

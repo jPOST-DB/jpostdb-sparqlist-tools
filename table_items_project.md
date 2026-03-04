@@ -55,11 +55,11 @@ WHERE {
   }
   OPTIONAL { 
     ?sample jpo:diseaseClass/rdfs:label ?disease_class_ds . 
-    FILTER (LANG(?disease_class_ds) = 'en' OR LANG(?disease_class_ds) = '')
+    FILTER (LANG(?disease_class_ds) = 'en' || LANG(?disease_class_ds) = '')
   }
   OPTIONAL { 
     ?sample jpo:disease/rdfs:label ?disease_ds . 
-    FILTER (LANG(?disease_ds) = 'en' OR LANG(?disease_ds) = '')
+    FILTER (LANG(?disease_ds) = 'en' || LANG(?disease_ds) = '')
   }
   OPTIONAL {
     ?dataset jpo:hasProfile/jpo:hasFractionation/jpo:hasFractionationType

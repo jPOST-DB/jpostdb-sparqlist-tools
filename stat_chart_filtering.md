@@ -111,7 +111,7 @@ WHERE {
            jpo:hasProfile ?profile .
   ?profile {{type_filter.ontology}}
   ?ontology {{type_filter.label}} ?label_tmp .
-  FILTER (LANG(?label_tmp) = 'en' OR LANG(?label_tmp) = '') 
+  FILTER (LANG(?label_tmp) = 'en' || LANG(?label_tmp) = '') 
   BIND(STR(?label_tmp) AS ?label) # delete lang
   {{type_filter.filter}}
   {{search_filter.code_dataset}}

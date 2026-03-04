@@ -44,9 +44,9 @@ WHERE {
   OPTIONAL { ?sample jpo:cellLine/rdfs:label ?cell_line . }
   OPTIONAL { ?sample jpo:organ/rdfs:label ?organ . }
   OPTIONAL { ?sample jpo:diseaseClass/rdfs:label ?disease_class . 
-           FILTER (LANG(?disease_class) = 'en' OR LANG(?disease_class) = '') }
+           FILTER (LANG(?disease_class) = 'en' || LANG(?disease_class) = '') }
   OPTIONAL { ?sample jpo:disease/rdfs:label ?disease . 
-           FILTER (LANG(?disease) = 'en' OR LANG(?disease) = '') }
+           FILTER (LANG(?disease) = 'en' || LANG(?disease) = '') }
   OPTIONAL { ?dataset jpo:hasProfile/jpo:hasFractionation/jpo:hasFractionationType [ a jpo:SubcellularFractionation;
                       rdfs:label ?fractionation ] . }       
   ?dataset sio:SIO_000216 [ a jpo:NumOfSpectra ;
