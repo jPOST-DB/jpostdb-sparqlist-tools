@@ -58,7 +58,7 @@ WHERE {
            {{filter.code}}
            rdfs:seeAlso ?up .
   ?up uniprot:classifiedWith ?go .
-  FILTER (REGEX (?go, obo:GO_))
+  FILTER (REGEX (STR (?go), "obo/GO_"))
   ?go rdfs:subClassOf* ?level .
   ?level rdfs:subClassOf obo:{{filter.go}} .
   ?level rdfs:label ?label .
