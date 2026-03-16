@@ -78,7 +78,7 @@ WHERE {
   FILTER (REGEX (STR (?go), "obo/GO_"))
   ?go rdfs:subClassOf* ?level .
   ?level rdfs:subClassOf obo:{{filter.go}} .
-  ?level rdfs:label "{{term}}"^^xsd:string .
+  ?level rdfs:label "{{term}}" . #^^xsd:string .
 }
 GROUP BY ?upid ?name ?symbol
 ORDER BY DESC (?pep_count) ?name
