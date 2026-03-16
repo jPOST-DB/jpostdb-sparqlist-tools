@@ -70,17 +70,17 @@ async ({species, species_s, sample_type, cell_line, organ, disease, disease_s, m
     ontology = "jpo:hasSample/jpo:" + type + " ?ontology .";
     if(type == "species"){
       label = "rdfs:seeAlso/skos:prefLabel";
-      replace = "(REPLACE (STR(?ontology), id_tax:, 'TAX_') AS ?id)";
+      replace = "(REPLACE (STR(?ontology), 'http://identifiers.org/taxonomy/', 'TAX_') AS ?id)";
     }else if(type == "sampleType" || type == "organ"){ 
-      replace = "(REPLACE (STR(?ontology), ncit:, '') AS ?id)";
+      replace = "(REPLACE (STR(?ontology), 'http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#', '') AS ?id)";
     }else if(type == "cellLine"){
       filter = "FILTER (REGEX (?ontology, 'obolibrary'))";
     }else if(type == "diseaseClass"){
-      replace = "(REPLACE (REPLACE (STR(?ontology), obo:, ''), jpo:, '') AS ?id)";
+      replace = "(REPLACE (REPLACE (STR(?ontology), 'http://purl.obolibrary.org/obo/', ''), jpo:, '') AS ?id)";
     }
   }else if(type == "modification"){
      ontology = "jpo:hasEnzymeAndModification/(jpo:variableModification|jpo:fixedModification) [ a ?ontology ;\n     jpo:modificationClass jpo:JPO_022 ] .";
-     replace = "(REPLACE (STR(?ontology), unimod:, '') AS ?id)";
+     replace = "(REPLACE (STR(?ontology), 'http://www.unimod.org/obo/unimod.obo#', '') AS ?id)";
    }else if(type == "instrument"){
      ontology = "jpo:hasMsMode/jpo:instrument ?ontology .";
    }
