@@ -8,7 +8,7 @@
   * default: biological_process
   * example: biological_process, molecular_function, cellular_component
 * `term`
-  * default: cellular process
+  * default: cellular component organization
 
 ## `json`
 
