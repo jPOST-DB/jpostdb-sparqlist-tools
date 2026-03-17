@@ -2,8 +2,8 @@
 
 ## Parameters
 
-* `datasets`
-  * default: DS1705_1,DS1705_2,DS1705_3
+* `datasets` (for frontend php)
+  * default:  DS1636_2,DS1637_2,DS1638_2
 * `order` (Opt.)
   * default: mnemonic
 * `desc` (Opt.)
@@ -27,7 +27,7 @@ async ({datasets})=>{
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   };
-  let api = "https://tools.jpostdb.org/proteins_by_datasets?accession=true&dataset=" + encodeURIComponent(dataset.replace(/[, ]+/g, ","));
+  let api = "https://tools.jpostdb.org/proteins_by_datasets?accession=true&dataset=" + encodeURIComponent(datasets.replace(/[, ]+/g, ","));
   try{
     const res = await fetch(api, options).then(res=>res.json());
     return res.proteins;

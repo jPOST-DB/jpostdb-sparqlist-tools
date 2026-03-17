@@ -67,7 +67,7 @@ SELECT DISTINCT ?upid ?name ?symbol (COUNT (DISTINCT ?pep) AS ?pep_count) (COUNT
 WHERE {
   VALUES ?dataset { {{filter.values}} }
   ?dataset jpo:hasProtein ?protein .
-  ?protein a jpo:Protein ;
+  ?protein a obo:MS_1002401 ;
             rdfs:label ?upid ;
            jpo:hasDatabaseSequence ?up .
   ?protein  jpo:hasPeptideEvidence/jpo:hasPeptide ?pep .
