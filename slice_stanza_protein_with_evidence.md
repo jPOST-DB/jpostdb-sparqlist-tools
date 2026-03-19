@@ -58,6 +58,7 @@ WHERE {
 ```
 
 ## `chromosome`
+* 再計算するのでa obo:MS_1002401 (leading protein)で絞り込まない
 
 ```sparql
 PREFIX uniprot: <http://purl.uniprot.org/core/>
@@ -70,7 +71,6 @@ SELECT ?chr (COUNT (DISTINCT ?up) AS ?count)
 WHERE {
   VALUES ?dataset { {{filter.values}} }
   ?dataset jpo:hasProtein ?protein .
-  ?protein a obo:MS_1002401 .  ### leading protein
   ?protein jpo:hasDatabaseSequence ?up .
   ?up uniprot:proteome ?chr .
 }
@@ -124,12 +124,12 @@ WHERE {
            rdfs:label ?upid ;
            jpo:hasDatabaseSequence ?up .
   {{filter.code}}
-  ?protein  jpo:hasPeptideEvidence/jpo:hasPeptide ?pep .
+  ?protein  jpo:hasIsoform* / jpo:hasPeptideEvidence / jpo:hasPeptide ?pep .
   ?pep jpo:hasPsm ?psm .
   ?up  uniprot:mnemonic ?symbol .
   ?up uniprot:proteome ?chr .
   FILTER(REGEX(STR(?chr), "{{proteome.id}}"))
-  OPTIONAL { ?up (uniprot:recommendedName|uniprot:submittedName)/uniprot:fullName ?name . }
+  OPTIONAL { ?up (uniprot:recommendedName | uniprot:submittedName) / uniprot:fullName ?name . }
 }
 GROUP BY ?upid ?name ?symbol ?chr
 ORDER BY DESC (?pep_count) ?name
