@@ -66,6 +66,7 @@ WHERE {
 {{SPARQLIST_EP}}
 
 ## `protein_go`
+* 再計算するのでa obo:MS_1002401 (leading protein)で絞り込まない
 
 ```sparql
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>

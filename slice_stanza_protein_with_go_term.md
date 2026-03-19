@@ -54,6 +54,7 @@ async ({dataset})=>{
 {{SPARQLIST_EP}}
 
 ## `get_list`
+* 再計算するのでa obo:MS_1002401 (leading protein)で絞り込まない
 
 ```sparql
 #DEFINE sql:select-option "order"
@@ -67,8 +68,7 @@ SELECT DISTINCT ?upid ?name ?symbol (COUNT (DISTINCT ?pep) AS ?pep_count) (COUNT
 WHERE {
   VALUES ?dataset { {{filter.values}} }
   ?dataset jpo:hasProtein ?protein .
-  ?protein a obo:MS_1002401 ;
-            rdfs:label ?upid ;
+  ?protein rdfs:label ?upid ;
            jpo:hasDatabaseSequence ?up .
   ?protein jpo:hasIsoform* / jpo:hasPeptideEvidence / jpo:hasPeptide ?pep .
   ?pep jpo:hasPsm ?psm .
