@@ -61,7 +61,7 @@ async ({species, species_s, sample_type, cell_line, organ, disease, disease_s, m
   if(type == "sample_type") type = "sampleType";
   else if(type == "cell_line") type = "cellLine";
   else if(type == "disease") type = "diseaseClass";	
-  let replace = "(REPLACE (STR(?ontology), obo:, '') AS ?id)";
+  let replace = "(REPLACE (STR(?ontology), 'http://purl.obolibrary.org/obo/', '') AS ?id)";
   let ontology = "";
   let label = "rdfs:label";
   let filter = "";
