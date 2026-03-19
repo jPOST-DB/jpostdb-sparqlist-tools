@@ -133,12 +133,12 @@ WHERE {
            rdfs:label ?upid ;
            jpo:hasDatabaseSequence ?up .
   {{filter2.code}}
-  ?protein  jpo:hasPeptideEvidence/jpo:hasPeptide ?pep .
+  ?protein jpo:hasIsoform* / jpo:hasPeptideEvidence / jpo:hasPeptide ?pep .
   ?pep jpo:hasPsm ?psm .
   ?up  uniprot:mnemonic ?symbol .
   ?up uniprot:proteome ?chr .
   FILTER(REGEX(STR(?chr), "{{proteome.id}}"))
-  OPTIONAL { ?up (uniprot:recommendedName|uniprot:submittedName)/uniprot:fullName ?name . }
+  OPTIONAL { ?up (uniprot:recommendedName | uniprot:submittedName) / uniprot:fullName ?name . }
 }
 GROUP BY ?upid ?name ?symbol ?chr
 ORDER BY DESC (?pep_count) ?name
