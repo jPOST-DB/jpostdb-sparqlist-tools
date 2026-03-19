@@ -60,10 +60,12 @@ WHERE {
            {{filter.code}}
             rdfs:label ?upid ;
            jpo:hasDatabaseSequence ?up .
-  ?protein  jpo:hasPeptideEvidence/jpo:hasPeptide ?pep .
+  ?protein jpo:hasIsoform* / jpo:hasPeptideEvidence / jpo:hasPeptide ?pep .
   ?pep jpo:hasPsm ?psm .
-  ?up  uniprot:mnemonic ?symbol .
-  OPTIONAL { ?up (uniprot:recommendedName|uniprot:submittedName)/uniprot:fullName ?name . }
+  OPTIONAL {
+    ?up uniprot:mnemonic ?symbol ; 
+        (uniprot:recommendedName | uniprot:submittedName) / uniprot:fullName ?name . 
+  }
   ?up uniprot:classifiedWith ?go .
   FILTER (REGEX (STR (?go), "obo/GO_"))
   ?go rdfs:subClassOf* ?level .

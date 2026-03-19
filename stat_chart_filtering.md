@@ -76,7 +76,7 @@ async ({species, species_s, sample_type, cell_line, organ, disease, disease_s, m
     }else if(type == "cellLine"){
       filter = "FILTER (REGEX (?ontology, 'obolibrary'))";
     }else if(type == "diseaseClass"){
-      replace = "(REPLACE (REPLACE (STR(?ontology), 'http://purl.obolibrary.org/obo/', ''), jpo:, '') AS ?id)";
+      replace = "(REPLACE (REPLACE (STR(?ontology), 'http://purl.obolibrary.org/obo/', ''), 'http://rdf.jpostdb.org/ontology/jpost.owl#', '') AS ?id)";
     }
   }else if(type == "modification"){
      ontology = "jpo:hasEnzymeAndModification/(jpo:variableModification|jpo:fixedModification) [ a ?ontology ;\n     jpo:modificationClass jpo:JPO_022 ] .";
