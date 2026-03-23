@@ -87,6 +87,9 @@ PREFIX sio: <http://semanticscience.org/resource/>
 PREFIX : <http://rdf.jpostdb.org/entry/>
 SELECT {{filter.select_line}}
 WHERE {
+  {
+    SELECT DISTINCT ?psm ?sequence
+    {
 {{filter.code_species_value}}
 {{filter.code_protein_value}}
 {{filter.code_peptide_value}}
@@ -97,6 +100,8 @@ WHERE {
   ?peptide jpo:hasPsm ?psm ;
            jpo:hasSequence [ a obo:MS_1001344 ;
                                rdf:value ?sequence ] .
+    }
+  }
   ?psm dct:identifier ?psm_id ;
        sio:SIO_000216 [ a obo:MS_1000041 ;
                          sio:SIO_000300 ?charge ] ; 
