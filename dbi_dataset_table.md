@@ -119,7 +119,13 @@ WHERE {
 {{filter.code_value}}
   ?dataset a jpo:Dataset ;
            dct:identifier ?dataset_id ;
-           ^jpo:hasDataset ?project .
+           ^jpo:hasDataset ?project ;
+           sio:SIO_000216 [ a jpo:NumOfLeadingProteins ;
+                          sio:SIO_000300 ?protein_count ] ;
+           sio:SIO_000216 [ a jpo:NumOfSpectra ;
+                          sio:SIO_000300 ?spectrum_count ] ;
+           jpo:hasProfile/jpo:hasSample/jpo:species/rdfs:seeAlso/skos:prefLabel ?species_label .
+  FILTER (LANG(?species_label) = 'en') 
 {{filter.code_dataset}}
 }
 {{filter.code_limit}}
@@ -131,7 +137,6 @@ WHERE {
   if (line_count) return 0;
   return {
     values: dataset.results.bindings.map(d => ":" + d.dataset_id.value).join(" "),
-    order: filter.code_limit.replace("OFFSET", "#OFFSET").replace("LIMIT", "#LIMIT")
   }
 }
 ```
@@ -157,26 +162,36 @@ WHERE {
   {{#unless line_count}}
   VALUES ?dataset { {{query_code.values}} }
   ?dataset a jpo:Dataset ;
-           dct:identifier ?dataset_id ;
-           sio:SIO_000216 [ a jpo:NumOfLeadingProteins ;
-                          sio:SIO_000300 ?protein_count ] ;
-           sio:SIO_000216 [ a jpo:NumOfSpectra ;
-                          sio:SIO_000300 ?spectrum_count ] .
-  ?dataset jpo:hasProfile/jpo:hasSample/jpo:species/rdfs:seeAlso/skos:prefLabel ?species_label .
-  FILTER (LANG(?species_label) = 'en') 
+           dct:identifier ?dataset_id .
   ?project jpo:hasDataset ?dataset ;
            dct:identifier ?project_id ;
            dct:title ?project_title ;
            dct:date ?project_date .
   {{/unless}}
 }
-{{query_code.order}}
 ```
 
 ## `dataset_items`
 ```javascript
 ({line_count, dataset, info}) => {
   if (line_count) return dataset;
-  return info;
+  let ds2pro = {};
+  info.results.bindings.forEach(d => {
+    ds2pro[d.dataset_id.value] = {
+      project_id : d.project_id ,
+      project_title : d.project_title, 
+      project_date : d.project_date 
+    }
+  });
+  dataset.head.vars.push("project_id", "project_title", "project_date");
+  for (let i = 0; i < dataset.results.bindings.length; i++) {
+    const ds_id = dataset.results.bindings[i].dataset_id.value;
+    if (ds2pro[ds_id]) {
+      dataset.results.bindings[i].project_id = ds2pro[ds_id].project_id;
+      dataset.results.bindings[i].project_title = ds2pro[ds_id].project_title;
+      dataset.results.bindings[i].project_date = ds2pro[ds_id].project_date;
+    }
+  }
+  return dataset;
 }
 ```

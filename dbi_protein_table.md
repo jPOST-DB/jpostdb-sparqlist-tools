@@ -1,10 +1,5 @@
 # Protein table (for DB interface) req. 'dbi_make_filter_code'
 
-* OPTIONAL の中が多いと遅いので sparql クエリ分割
-  * 必要な offset limit 分だけ別クエリで取得
-  * 一つの sparql json 形式に加工して返す
-  * line count のときは unless でスキップ
-
 ## Parameters
 
 * `datasets` (Opt.)
@@ -85,7 +80,7 @@ async ({datasets, species, species_s, sample_type, cell_line, organ, disease, di
   if(offset) params.push("offset=" + offset );
 
   var res = await sparqlet("dbi_make_filter_code", params.join("&"));
-  res.select_line = "DISTINCT ?protein ?accession ?mnemonic";
+  res.select_line = "DISTINCT ?protein ?accession ?mnemonic ?full_name (STRLEN (?sequence) AS ?length) ?sequence";
   if(line_count){
     res.select_line = "(COUNT(DISTINCT ?protein) AS ?line_count)";
     res.code_limit = "";
@@ -140,6 +135,11 @@ WHERE {
   }
   ?protein ^jpo:hasDatabaseSequence/rdfs:label ?accession .
   {{#unless line_count}}
+  ?protein (uniprot:recommendedName/uniprot:fullName)|(uniprot:submittedName/uniprot:fullName) ?full_name ;
+           uniprot:sequence ?seqEnt .
+  FILTER (REGEX (STR (?seqEnt), ?accession))
+  ?seqEnt a uniprot:Simple_Sequence ;
+          rdf:value ?sequence .
   OPTIONAL {
     ?protein uniprot:mnemonic ?mnemonic .
   }
@@ -147,60 +147,4 @@ WHERE {
   FILTER (! REGEX (?accession, "corona"))
 }
 {{filter.code_limit}}
-```
-
-## `uniprot`
-```javascript
-({mnemonic, line_count}) => {
-  if (line_count) return 0;
-  return mnemonic.results.bindings.map(d => "up:" + d.accession.value).join(" ");
-}
-```
-
-## `sequence`
-```sparql
-#DEFINE sql:select-option "order"
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX jpo: <http://rdf.jpostdb.org/ontology/jpost.owl#>
-PREFIX obo: <http://purl.obolibrary.org/obo/>
-PREFIX uniprot: <http://purl.uniprot.org/core/>
-PREFIX up: <http://purl.uniprot.org/uniprot/>
-SELECT DISTINCT ?accession ?full_name (STRLEN (?sequence) AS ?length) ?sequence
-WHERE {
-  {{#unless line_count}}
-  VALUES ?protein { {{uniprot}} }
-  ?protein ^jpo:hasDatabaseSequence/rdfs:label ?accession ;
-           (uniprot:recommendedName/uniprot:fullName)|(uniprot:submittedName/uniprot:fullName) ?full_name ; 
-           uniprot:sequence ?seqEnt .
-  FILTER (REGEX (STR (?seqEnt), ?accession))
-  ?seqEnt a uniprot:Simple_Sequence ;
-          rdf:value ?sequence .
-{{/unless}}
-}
-```
-
-## `protein_items`
-```javascript
-({line_count, mnemonic, sequence}) => {
-  if (line_count) return mnemonic;
-  let acc2seq = {};
-  sequence.results.bindings.forEach(d => {
-    acc2seq[d.accession.value] = {
-      full_name: d.full_name,
-      sequence: d.sequence,
-      length: d.length
-    }
-  });
-  mnemonic.head.vars.push("full_name", "length", "sequence");
-  for (let i = 0; i < mnemonic.results.bindings.length; i++) {
-    const acc = mnemonic.results.bindings[i].accession.value;
-    if (acc2seq[acc]) {
-      mnemonic.results.bindings[i].full_name = acc2seq[acc].full_name;
-      mnemonic.results.bindings[i].sequence = acc2seq[acc].sequence;
-      mnemonic.results.bindings[i].length = acc2seq[acc].length;
-    }
-  }
-  return mnemonic;
-}
 ```
