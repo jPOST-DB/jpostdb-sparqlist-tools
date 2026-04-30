@@ -28,7 +28,7 @@ WHERE {
                                            rdfs:seeAlso ?enst .
   ?enst core:translatedTo ?ensp .
   OPTIONAL { ?enst rdfs:seeAlso/rdf:type ?type .}
-  FILTER (REGEX (?ensp, "ENSP"))
+  FILTER (REGEX (STR (?ensp), "ENSP"))
 }
 ```
 
