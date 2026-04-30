@@ -74,7 +74,7 @@ async ({species, species_s, sample_type, cell_line, organ, disease, disease_s, m
     }else if(type == "sampleType" || type == "organ"){ 
       replace = "(REPLACE (STR(?ontology), 'http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#', '') AS ?id)";
     }else if(type == "cellLine"){
-      filter = "FILTER (REGEX (?ontology, 'obolibrary'))";
+      filter = "FILTER (REGEX (STR (?ontology), 'obolibrary'))";
     }else if(type == "diseaseClass"){
       replace = "(REPLACE (REPLACE (STR(?ontology), 'http://purl.obolibrary.org/obo/', ''), 'http://rdf.jpostdb.org/ontology/jpost.owl#', '') AS ?id)";
     }
