@@ -3,7 +3,7 @@
 ## Parameters
 
 * `dataset`
-  * default: DS810_1 DS810_2 DS809_1 DS809_2
+  * example: DS1612_1 DS1613_1 DS1614_1
 
 ## `json`
 
