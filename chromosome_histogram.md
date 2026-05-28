@@ -68,9 +68,7 @@ GROUP BY ?chr
     }
   }
 //  var database = "GeneID";
-  var database = "";
-  if(max_prot == "UP000005640") database = "?up rdfs:seeAlso/uniprot:database <http://purl.uniprot.org/database/neXtProt> .";
-  return {id: max_prot, database: database};
+  return {id: max_prot};
 }
 ```
 
@@ -94,7 +92,6 @@ WHERE {
   ?protein a obo:MS_1002401 .  ### leading protein
   ?protein jpo:hasDatabaseSequence ?up .
   ?up uniprot:proteome ?chr .
-  {{proteome.database}}
 }
 GROUP BY ?chr
 ```
@@ -114,8 +111,8 @@ PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX : <http://rdf.jpostdb.org/entry/>
 SELECT ?chr (COUNT (DISTINCT ?up) AS ?count)
 WHERE {
-  ?up uniprot:proteome ?chr .
-  {{proteome.database}}
+  ?up uniprot:proteome ?chr ;
+      uniprot:reviewed true .
   FILTER( REGEX( STR(?chr), "/{{proteome.id}}#"))
 }
 GROUP BY ?chr
