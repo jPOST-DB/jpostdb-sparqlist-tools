@@ -68,7 +68,7 @@ WHERE {
 PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 PREFIX tgdb: <http://togodb.org/ontology/proteome_ips_test#>
 PREFIX cvo:  <http://purl.jp/bio/10/clinvar/>
-PREFIX tgvo: <http://togovar.biosciencedbc.jp/vocabulary/>
+PREFIX tgvo: <http://togovar.org/vocabulary/>
 PREFIX obo: <http://purl.obolibrary.org/obo/>
 PREFIX dct: <http://purl.org/dc/terms/>
 SELECT DISTINCT ?tgv ?hgvs ?cons_type ?interpretation
@@ -83,11 +83,14 @@ WHERE {
     ?var dct:identifier ?tgv .
   }
   OPTIONAL {
-    GRAPH <http://togovar.org/variant/annotation/clinvar> {
+    GRAPH <http://togovar.org/variant> {
       ?var dct:identifier ?var_id .
+      FILTER REGEX(?var_id, "^[0-9]+$")
+      BIND(IRI(CONCAT("http://ncbi.nlm.nih.gov/clinvar/variation/", ?var_id)) AS ?clinvar)
     }
-    BIND(IRI(CONCAT("http://ncbi.nlm.nih.gov/clinvar/variation/", ?var_id)) AS ?clinvar)
-    ?clinvar cvo:classified_record/cvo:rcv_list/cvo:rcv_accession/cvo:rcv_classifications/cvo:germline_classification/cvo:description/cvo:description ?interpretation .
+    GRAPH <http://togovar.org/clinvar> {
+      ?clinvar cvo:classified_record/cvo:rcv_list/cvo:rcv_accession/cvo:rcv_classifications/cvo:germline_classification/cvo:description/cvo:description ?interpretation .
+    }
   }
 }
 ORDER BY ?tgv
@@ -102,7 +105,8 @@ ORDER BY ?tgv
   var aa = {Gly: "G", Ala: "A", Leu: "L", Met: "M", Phe: "F", Trp: "W", Lys: "K", Gln: "Q", Glu: "E", Ser: "S", 
             Pro: "P", Val: "V", Ile: "I", Cys: "C", Tyr: "Y", His: "H", Arg: "R", Asn: "N", Asp: "D", Thr: "T", Ter: "X"};
   var clinvar_sig = {'Pathogenic': {sig: 1, color: "#ff5a54"}, 'Likely pathogenic': {sig: 2, color: "#ffae00"}, 'Uncertain significance': {sig: 3, color: "#c7bca5"},
-                     'Likely benign': {sig: 4, color: "#9dcf3a"}, 'Benign': {sig: 5, color: "#27d639"}, 'Conflicting interpretations of pathogenicity': {sig: 6, color: "#c654ff"},
+                     'Likely benign': {sig: 4, color: "#9dcf3a"}, 'Benign': {sig: 5, color: "#27d639"}, 'Conflicting classifications of pathogenicity':  {sig: 6, color: "#c654ff"},  
+                     // 'Conflicting interpretations of pathogenicity': {sig: 6, color: "#c654ff"}, // discon
                      'drug response': {sig: 7, color: "#9c8202"}, 'association': {sig: 8, color: "#9c8202"}, 'risk factor': {sig: 9, color: "#9c8202"}, 
                      'protective': {sig: 10, color: "#9c8202"}, 'affects': {sig: 11, color: "#9c8202"}, 'other': {sig: 12, color: "#9c8202"}, 'not provided': {sig: 13, color: "#999999"}};
   for(let i = 0; i < list.length; i++){
